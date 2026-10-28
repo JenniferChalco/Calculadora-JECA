@@ -1,119 +1,70 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import Display from '../components/Display';
+import Regilla from '../components/Regilla';
+import { useCalculator } from '../hooks/useCalculator';
 
 export default function CalculatorScreen() {
+  const { displayValue, subExpression, history, handlePress } = useCalculator();
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.calculatorContainer}>
-        {/* Pantalla de Visualización / Display (Vacía) */}
-        <View style={styles.displayContainer}>
-          <Text style={styles.subResultText}>250+10+18</Text>
-          <Text style={styles.mainResultText}>278</Text>
+      <View style={styles.container}>
+        
+        {/* Panel de Historial de Caja (Característica única) */}
+        <View style={styles.historyContainer}>
+          <Text style={styles.historyTitle}>📜 Historial de Caja</Text>
+          {history.length === 0 ? (
+            <Text style={styles.historyEmpty}>Sin operaciones recientes</Text>
+          ) : (
+            history.map((item, index) => (
+              <Text key={index} style={styles.historyItem}>• {item}</Text>
+            ))
+          )}
         </View>
 
-        {/* Fila 1 */}
-        <View style={styles.row}>
-          <Button label="C" />
-          <Button label="+/-" />
-          <Button label="%" />
-          <Button label="÷" />
-        </View>
+        {/* Pantalla / Display modular */}
+        <Display subExpression={subExpression} displayValue={displayValue} />
 
-        {/* Fila 2 */}
-        <View style={styles.row}>
-          <Button label="7" />
-          <Button label="8" />
-          <Button label="9" />
-          <Button label="×" />
-        </View>
-
-        {/* Fila 3 */}
-        <View style={styles.row}>
-          <Button label="4" />
-          <Button label="5" />
-          <Button label="6" />
-          <Button label="−" />
-        </View>
-
-        {/* Fila 4 */}
-        <View style={styles.row}>
-          <Button label="1" />
-          <Button label="2" />
-          <Button label="3" />
-          <Button label="+" />
-        </View>
-
-        {/* Fila 5 (El botón '=' es doble, ocupando dos espacios) */}
-        <View style={styles.row}>
-          <Button label="0" />
-          <Button label="." />
-          <Button label="=" isDouble />
-        </View>
+        {/* Botonera / Regilla modular */}
+        <Regilla onPressButton={handlePress} />
       </View>
     </SafeAreaView>
-  );
-}
-
-// Componente secundario para simplificar las teclas
-function Button({ label, isDouble }: { label: string; isDouble?: boolean }) {
-  return (
-    <TouchableOpacity style={[styles.button, isDouble && styles.doubleButton]} activeOpacity={0.7}>
-      <Text style={styles.buttonText}>{label}</Text>
-    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#C8EBFB', // Fondo general celeste de la app
+    backgroundColor: '#C8EBFB',
   },
-  calculatorContainer: {
+  container: {
     flex: 1,
-    justifyContent: 'flex-end', // Empuja la botonera hacia la parte inferior
+    justifyContent: 'flex-end',
     padding: 20,
     backgroundColor: '#C8EBFB',
   },
-  displayContainer: {
-    backgroundColor: 'transparent',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    height: 120,
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    marginBottom: 20,
-  },
-  subResultText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#5C433C',
-  },
-  mainResultText: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: '#3D1C1B',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  button: {
-    width: '22%', // Ancho normal para 4 columnas
-    height: 64,
-    backgroundColor: '#FF8EB2', // Botones en tono rosado
-    borderRadius: 14,
-    borderWidth: 2,
+  historyContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    borderRadius: 12,
+    padding: 10,
+    marginBottom: 10,
+    borderWidth: 1,
     borderColor: '#3D1C1B',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 4, // Relieve 3D original
   },
-  doubleButton: {
-    width: '48%', // Ancho doble para el botón '='
-  },
-  buttonText: {
-    fontSize: 24,
+  historyTitle: {
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#3D1C1B',
+    marginBottom: 4,
+  },
+  historyEmpty: {
+    fontSize: 12,
+    color: '#8E8E93',
+    fontStyle: 'italic',
+  },
+  historyItem: {
+    fontSize: 13,
+    color: '#5C433C',
+    marginVertical: 2,
   },
 });

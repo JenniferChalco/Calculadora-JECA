@@ -1,19 +1,11 @@
 import { Slot } from 'expo-router';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 export default function RootLayout() {
   return (
-    <View style={styles.container}>
-      {/* Iconos oscuros para que resalten sobre el fondo claro/azul pastel */}
-      <StatusBar barStyle="dark-content" backgroundColor="#C8EBFB" />
+    <>
+      <StatusBar style="dark" />
       <Slot />
-    </View>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#C8EBFB', // Fondo patrón azul pastel
-  },
-});
